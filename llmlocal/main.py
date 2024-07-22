@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI, responses, Request
 from fastapi.templating import Jinja2Templates
-from transformers import GPTJForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from collections.abc import MutableMapping
 from pymongo import MongoClient
 import uuid
@@ -75,7 +75,7 @@ def on_startup() -> None:
         mongo_url=MONGO_URL, db_name="llmlocal", collection_name="conversations"
     )
 
-    app.state.model = GPTJForCausalLM.from_pretrained(model_name)
+    app.state.model = AutoModelForCausalLM.from_pretrained(model_name)
     app.state.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 
