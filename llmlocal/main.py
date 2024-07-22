@@ -69,12 +69,15 @@ base_path = os.path.dirname(__file__)
 def on_startup() -> None:
     model_name = MODEL_NAME
     assert model_name is not None
-    app.state.model = GPTJForCausalLM.from_pretrained(model_name)
-    app.state.tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    app.state.templates = Jinja2Templates(directory=os.path.join(base_path, "static"))
     app.state.conversations = MongoDict(
         mongo_url=MONGO_URL, db_name="llmlocal", collection_name="conversations"
     )
-    app.state.templates = Jinja2Templates(directory=os.path.join(base_path, "static"))
+
+    app.state.model = GPTJForCausalLM.from_pretrained(model_name)
+    app.state.tokenizer = AutoTokenizer.from_pretrained(model_name)
+
 
 
 def generate(chat_id, input_text):
