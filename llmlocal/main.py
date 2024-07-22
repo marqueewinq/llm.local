@@ -58,6 +58,7 @@ class ChatRequest(BaseModel):
     input_text: str
 
 
+MODEL_NAME = os.getenv("MODEL_NAME")
 MONGO_URL = os.getenv("MONGO_URL")
 
 app = FastAPI()
@@ -66,7 +67,8 @@ base_path = os.path.dirname(__file__)
 
 @app.on_event("startup")
 def on_startup() -> None:
-    model_name = "EleutherAI/gpt-j-6B"
+    model_name = MODEL_NAME
+    assert model_name is not None
     app.state.model = GPTJForCausalLM.from_pretrained(model_name)
     app.state.tokenizer = AutoTokenizer.from_pretrained(model_name)
     app.state.conversations = MongoDict(
