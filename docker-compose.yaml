@@ -17,7 +17,7 @@ services:
       - "8001:8001"
     environment:
       MONGO_URL: "mongodb://root:example@mongo:27017/"
-      MODEL_NAME: "EleutherAI/gpt-j-6B"
+      MODEL_NAME: "distilgpt2"
     healthcheck:
       test: ["CMD-SHELL", "wget http://0.0.0.0:8001/ || exit 1"]
       interval: 2s
