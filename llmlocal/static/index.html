@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat Interface</title>
+    </head>
+    <body>
+        <h1>Chat Interface</h1>
+        <button onclick="startChat()">Start New Chat</button>
+        <div id="chat" style="display: none;">
+            <div id="conversation"></div>
+            <input type="text" id="message" placeholder="Type your message here">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <script>
+            let chat_id = '';
+
+            async function startChat() {
+                const response = await fetch('/chat', { method: 'POST' });
+                const data = await response.json();
+                chat_id = data.chat_id;
+                document.getElementById('chat').style.display = 'block';
+                document.getElementById('conversation').innerHTML = '';
+            }
+
+            async function sendMessage() {
+                const message = document.getElementById('message').value;
+                const response = await fetch(`/chat/${chat_id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ input_text: message }),
+                });
+                const data = await response.json();
+                document.getElementById('conversation').innerHTML = data.content.replace(/\\n/g, '<br>');
+                document.getElementById('message').value = '';
+            }
+        </script>
+    </body>
+</html>
